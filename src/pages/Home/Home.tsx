@@ -8,6 +8,7 @@ import icStreak from "../../assets/ic-streak.svg";
 import icTrophy from "../../assets/ic-trophy.svg";
 import icGoalStar from "../../assets/orange-star.svg";
 import icNew from "../../assets/new.svg";
+import icIng from "../../assets/ing.svg";
 import icDefaultBadge from "../../assets/default-badge.svg";
 
 // 컴포넌트
@@ -23,12 +24,22 @@ const Home = () => {
 
   const navigate = useNavigate();
 
+  // 같은 goalId를 가진 배지들을 그룹화 (goalId 순으로 정렬)
+  const groupedBadges = Array.from(
+    new Map(badges.map((badge) => [badge.goalId, badge])).values()
+  ).sort((a, b) => a.goalId - b.goalId);
+
+  // 진행 중인 목표 찾기 (runStatus가 IN_PROGRESS인 배지의 goalId)
+  const inProgressGoalId = badges.find(
+    (badge) => badge.runStatus === "IN_PROGRESS"
+  )?.goalId;
+
   return (
     <div className="h-screen bg-[#FEF6EE] flex flex-col overflow-hidden">
       {/* Header: back 아이콘 & 로고 */}
       <header className="h-[53px] p-4 flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-10">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/")}
           className="p-1 active:opacity-50 transition-opacity"
         >
           <img src={icBack} alt="Back" className="w-6 h-6" />
@@ -93,7 +104,8 @@ const Home = () => {
               </div>
             </div>
           </section>
-          {/* 조건부 렌더링 - 케이스1 (목표 & 이전 이력 존재X) */}
+
+          {/* 케이스 1: 목표 없음 (!hasInProgress && badges.length === 0) */}
           {!hasInProgress && badges.length === 0 && (
             <div className="mb-10 flex flex-col items-center">
               {/* 안내 텍스트 */}
@@ -106,7 +118,7 @@ const Home = () => {
                 </p>
               </div>
               {/* 1. 새 목표*/}
-              <div className="relative mb-6">
+              <div className="relative mb-2">
                 <img
                   src={icNew}
                   alt="new goal"
@@ -142,17 +154,124 @@ const Home = () => {
               </div>
             </div>
           )}
-          {/* 이전 진행 이력 리스트 (케이스 2, 3) */}
-          {badges.length > 0 && (
-            <div className="flex flex-col gap-16 pb-20 items-center w-full mt-10">
-              {badges.map((badge, i) => (
-                <div
-                  key={badge.runId}
-                  className={i % 2 === 0 ? "ml-[-60px]" : "mr-[-60px]"}
-                >
-                  <HistoryBadge badge={badge} />
+
+          {/* 케이스 2: 새 목표 + 과거 이력 (!hasInProgress && badges.length > 0) */}
+          {!hasInProgress && badges.length > 0 && (
+            <div className="flex flex-col items-center w-full">
+              {/* 새 목표와 과거 이력 배지들 지그재그 배치 */}
+              <div className="flex flex-col gap-16 pb-20 items-center w-full mt-10">
+                {/* 새 목표 (index 0 - 왼쪽) */}
+                <div className="ml-[-60px]">
+                  <div className="flex flex-col items-center">
+                    <div className="relative mb-2">
+                      <img
+                        src={icNew}
+                        alt="new goal"
+                        className="w-[80px] h-[49px] object-contain"
+                      />
+                    </div>
+
+                    <div className="relative w-[106px] h-[106px] flex items-center justify-center">
+                      <ProgressRing result="DEFAULT" angle={0} />
+                      <ProgressRing result="DEFAULT" angle={120} />
+                      <ProgressRing result="DEFAULT" angle={240} />
+
+                      <img
+                        src={icDefaultBadge}
+                        alt="default badge"
+                        className="absolute w-[79px] h-[76px] object-contain"
+                      />
+
+                      <button
+                        onClick={() => navigate("/goal/new")}
+                        className="relative z-10 w-[51px] h-[51px] flex items-center justify-center active:scale-95 transition-transform"
+                      >
+                        <img
+                          src={icGoalStar}
+                          alt="goal star"
+                          className="w-full h-full object-contain"
+                        />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              ))}
+
+                {/* 과거 이력 배지들 (index 1부터 - 오른쪽부터 시작) */}
+                {groupedBadges
+                  .filter((badge) => badge.goalId !== inProgressGoalId)
+                  .map((badge, i) => (
+                    <div
+                      key={badge.goalId}
+                      className={
+                        (i + 1) % 2 === 0 ? "ml-[-60px]" : "mr-[-60px]"
+                      }
+                    >
+                      <HistoryBadge
+                        badge={badge}
+                        relatedBadges={badges.filter(
+                          (b) => b.goalId === badge.goalId
+                        )}
+                      />
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* 케이스 3: 진행 중인 목표 + 과거 이력 (hasInProgress && badges.length > 0) */}
+          {hasInProgress && badges.length > 0 && (
+            <div className="flex flex-col items-center w-full">
+              {/* 진행 중인 목표 + 과거 이력 배지들 지그재그 배치 */}
+              <div className="flex flex-col gap-16 pb-20 items-center w-full mt-10">
+                {/* 진행 중인 목표 (index 0 - 왼쪽) */}
+                <div className="ml-[-60px]">
+                  <div className="flex flex-col items-center">
+                    <div className="relative mb-2">
+                      <img
+                        src={icIng}
+                        alt="in progress goal"
+                        className="w-[80px] h-[49px] object-contain"
+                      />
+                    </div>
+
+                    {inProgressGoalId &&
+                      groupedBadges.find(
+                        (badge) => badge.goalId === inProgressGoalId
+                      ) && (
+                        <HistoryBadge
+                          badge={
+                            groupedBadges.find(
+                              (badge) => badge.goalId === inProgressGoalId
+                            )!
+                          }
+                          relatedBadges={badges.filter(
+                            (b) => b.goalId === inProgressGoalId
+                          )}
+                          onClick={() => navigate(`/goal/${inProgressGoalId}`)}
+                        />
+                      )}
+                  </div>
+                </div>
+
+                {/* 과거 이력 배지들 (index 1부터 - 오른쪽부터 시작) */}
+                {groupedBadges
+                  .filter((badge) => badge.goalId !== inProgressGoalId)
+                  .map((badge, i) => (
+                    <div
+                      key={badge.goalId}
+                      className={
+                        (i + 1) % 2 === 0 ? "ml-[-60px]" : "mr-[-60px]"
+                      }
+                    >
+                      <HistoryBadge
+                        badge={badge}
+                        relatedBadges={badges.filter(
+                          (b) => b.goalId === badge.goalId
+                        )}
+                      />
+                    </div>
+                  ))}
+              </div>
             </div>
           )}
         </div>

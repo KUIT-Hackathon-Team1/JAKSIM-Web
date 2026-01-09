@@ -12,14 +12,12 @@ interface Badge {
   goalId: number;
   goalTitle: string;
   category: string;
-  categoryIconKey: string;
   runStatus: string;
   tierStatus: string | null;
   startDate: string;
   expectedEndDate: string;
   endedAt: string | null;
   result?: "SUCCESS" | "FAIL" | "DEFAULT" | "HALF";
-  memo?: string;
 }
 
 interface HomeResponse {
@@ -46,70 +44,156 @@ const useHomeData = () => {
 
   useEffect(() => {
     // TODO: 실제 API 호출 시 이 부분을 fetch/axios로 변경 필요.
+    const badges = [
+      // 목표 1: SUCCESS 배지 (모두 SUCCESS) - goalId: 10
+      {
+        runId: 1,
+        goalId: 10,
+        goalTitle: "아침 운동",
+        category: "weight",
+        runStatus: "COMPLETED",
+        tierStatus: "GOLD",
+        startDate: "2026-01-07",
+        expectedEndDate: "2026-01-09",
+        endedAt: "2026-01-09",
+        result: "SUCCESS" as const,
+      },
+      {
+        runId: 2,
+        goalId: 10,
+        goalTitle: "아침 운동",
+        category: "weight",
+        runStatus: "COMPLETED",
+        tierStatus: "GOLD",
+        startDate: "2026-01-07",
+        expectedEndDate: "2026-01-09",
+        endedAt: "2026-01-09",
+        result: "SUCCESS" as const,
+      },
+      {
+        runId: 3,
+        goalId: 10,
+        goalTitle: "아침 운동",
+        category: "weight",
+        runStatus: "COMPLETED",
+        tierStatus: "GOLD",
+        startDate: "2026-01-07",
+        expectedEndDate: "2026-01-09",
+        endedAt: "2026-01-09",
+        result: "SUCCESS" as const,
+      },
+      // 목표 2: HALF 배지 (HALF 하나, 나머지 SUCCESS) - goalId: 8
+      {
+        runId: 1,
+        goalId: 8,
+        goalTitle: "명상하기",
+        category: "health",
+        runStatus: "COMPLETED",
+        tierStatus: "SILVER",
+        startDate: "2026-01-04",
+        expectedEndDate: "2026-01-06",
+        endedAt: "2026-01-06",
+        result: "SUCCESS" as const,
+      },
+      {
+        runId: 2,
+        goalId: 8,
+        goalTitle: "명상하기",
+        category: "health",
+        runStatus: "COMPLETED",
+        tierStatus: "SILVER",
+        startDate: "2026-01-04",
+        expectedEndDate: "2026-01-06",
+        endedAt: "2026-01-06",
+        result: "HALF" as const,
+      },
+      {
+        runId: 3,
+        goalId: 8,
+        goalTitle: "명상하기",
+        category: "health",
+        runStatus: "COMPLETED",
+        tierStatus: "SILVER",
+        startDate: "2026-01-04",
+        expectedEndDate: "2026-01-06",
+        endedAt: "2026-01-06",
+        result: "SUCCESS" as const,
+      },
+      // 목표 3: FAIL 배지 (runId 2에서 FAIL → runId 3 없음) - goalId: 5
+      {
+        runId: 1,
+        goalId: 5,
+        goalTitle: "물 마시기",
+        category: "health",
+        runStatus: "COMPLETED",
+        tierStatus: null,
+        startDate: "2026-01-01",
+        expectedEndDate: "2026-01-03",
+        endedAt: "2026-01-02",
+        result: "SUCCESS" as const,
+      },
+      {
+        runId: 2,
+        goalId: 5,
+        goalTitle: "물 마시기",
+        category: "health",
+        runStatus: "COMPLETED",
+        tierStatus: null,
+        startDate: "2026-01-01",
+        expectedEndDate: "2026-01-03",
+        endedAt: "2026-01-02",
+        result: "FAIL" as const,
+      },
+      // 목표 4: 진행중 - runId 1,2만 있음, 서로 다른 result로 각 링 색칠 - goalId: 12
+      {
+        runId: 1,
+        goalId: 12,
+        goalTitle: "책 읽기",
+        category: "language",
+        runStatus: "IN_PROGRESS",
+        tierStatus: null,
+        startDate: "2026-01-09",
+        expectedEndDate: "2026-01-11",
+        endedAt: null,
+        result: "SUCCESS" as const,
+      },
+      {
+        runId: 2,
+        goalId: 12,
+        goalTitle: "책 읽기",
+        category: "language",
+        runStatus: "IN_PROGRESS",
+        tierStatus: null,
+        startDate: "2026-01-09",
+        expectedEndDate: "2026-01-11",
+        endedAt: null,
+        result: "SUCCESS" as const,
+      },
+    ];
+
+    // goalId별로 runId 개수 계산
+    const goalRunCounts = new Map<number, number>();
+    badges.forEach((badge) => {
+      goalRunCounts.set(
+        badge.goalId,
+        (goalRunCounts.get(badge.goalId) || 0) + 1
+      );
+    });
+
+    // runId가 1,2,3이 다 있지 않은 경우가 하나라도 있으면 hasInProgress = true
+    const hasInProgress = Array.from(goalRunCounts.values()).some(
+      (count) => count < 3
+    );
+
     const mockResponse: HomeResponse = {
       summary: {
         completedLoops: 4,
         streakDays: 6,
         achievementRate: 80,
       },
-      hasInProgress: true,
+      hasInProgress,
       newGoalIconKey: "star",
-      badges: [
-        {
-          runId: 1,
-          goalId: 10,
-          goalTitle: "하루 10분 스트레칭",
-          category: "EXERCISE",
-          categoryIconKey: "weight",
-          runStatus: "IN_PROGRESS",
-          tierStatus: null,
-          startDate: "2026-01-09",
-          expectedEndDate: "2026-01-11",
-          endedAt: null,
-        },
-        {
-          runId: 2,
-          goalId: 8,
-          goalTitle: "아침 명상",
-          category: "MINDFULNESS",
-          categoryIconKey: "meditation",
-          runStatus: "COMPLETED",
-          tierStatus: "GOLD",
-          startDate: "2026-01-06",
-          expectedEndDate: "2026-01-08",
-          endedAt: "2026-01-08",
-          result: "SUCCESS",
-          memo: "완벽한 3일 달성!",
-        },
-        {
-          runId: 3,
-          goalId: 5,
-          goalTitle: "하루 2리터 물 마시기",
-          category: "HEALTH",
-          categoryIconKey: "water",
-          runStatus: "COMPLETED",
-          tierStatus: "SILVER",
-          startDate: "2026-01-03",
-          expectedEndDate: "2026-01-05",
-          endedAt: "2026-01-05",
-          result: "HALF",
-          memo: "2일만 성공",
-        },
-        {
-          runId: 4,
-          goalId: 12,
-          goalTitle: "독서 30분",
-          category: "LEARNING",
-          categoryIconKey: "book",
-          runStatus: "COMPLETED",
-          tierStatus: null,
-          startDate: "2025-12-31",
-          expectedEndDate: "2026-01-02",
-          endedAt: "2026-01-01",
-          result: "FAIL",
-          memo: "중단됨",
-        },
-      ],
+      badges,
     };
 
     // 데이터를 가져오는 시뮬레이션
