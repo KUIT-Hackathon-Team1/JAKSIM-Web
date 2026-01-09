@@ -1,13 +1,11 @@
 import { useState } from "react";
 import GoalNameInput from "./GoalNameInput";
 import GoalSuggestionCard from "./GoalSuggestionCard";
-import GoalFormBottom from "./GoalFormBottom";
+
 import { ActionButton } from "./ActionButton";
 
 const GoalNewForm = () => {
   const [goalName, setGoalName] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [purpose, setPurpose] = useState("");
 
   // AI 추천 목표 데이터
   const suggestions = [
@@ -49,13 +47,12 @@ const GoalNewForm = () => {
             />
           ))}
         </div>
-
-        {/* 카테고리 + 목표 의도 */}
-        <GoalFormBottom selectedCategory={selectedCategory} onCategorySelect={setSelectedCategory} purpose={purpose} onPurposeChange={setPurpose} />
       </div>
-      <div className="flex m-3 gap-2">
-        <ActionButton variant="disabled">취소</ActionButton>
-        <ActionButton variant="primary">저장</ActionButton>
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px]">
+        <div className="flex m-3 gap-2">
+          <ActionButton variant="disabled">취소</ActionButton>
+          <ActionButton variant="primary">저장</ActionButton>
+        </div>
       </div>
     </>
   );

@@ -9,7 +9,7 @@ const GoalFormBottom = ({ selectedCategory, onCategorySelect, purpose, onPurpose
   const categories = ["건강", "언어", "운동", "자기개발"];
 
   return (
-    <div className=" pt-3 border-t border-gray-200">
+    <div className="">
       {/* 카테고리 */}
       <div className="mb-4">
         <label className="block text-[16px] font-semibold text-gray-900 mb-1">

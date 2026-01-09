@@ -6,37 +6,75 @@ interface GoalProgressCardProps {
 }
 
 export const GoalProgressCard = ({ data }: GoalProgressCardProps) => {
-  const currentDay = data.days.filter((d) => d.finalized).length || 1;
+  const getCurrentDay = (): number => {
+    const finalizedDays = data.days.filter((d) => d.finalized).length;
+    return finalizedDays === data.days.length ? finalizedDays : finalizedDays + 1;
+  };
 
-  // 카테고리별 아이콘
-  const getIcon = (key: string) => {
-    const icons: Record<string, string> = {
-      weight: "🏋️", // 운동
-      language: "💬", // 언어
-      "self-development": "😊", // 자기계발
-      health: "❤️", // 건강
-    };
-    return icons[key];
+  const currentDay = getCurrentDay();
+
+  // result에 따른 색상
+  const getStatusColor = (result: string, finalized: boolean) => {
+    if (!finalized) return "bg-[#E8E6E5]";
+
+    switch (result) {
+      case "DONE":
+        return "bg-[#FFBF3F]";
+      case "PARTIAL":
+        return "bg-[#315762]";
+      case "FAIL":
+        return "bg-[#736E67]";
+      default:
+        return "bg-[#E8E6E5]";
+    }
+  };
+
+  // 현재까지의 달성 등급 판정 (아이콘용)
+  const getAchievementLevel = (): "success" | "half" | "fail" | "default" => {
+    const finalizedDays = data.days.filter((d) => d.finalized);
+
+    if (finalizedDays.length === 0) {
+      return "default";
+    }
+
+    if (finalizedDays.some((d) => d.result === "FAIL")) {
+      return "fail";
+    }
+
+    if (finalizedDays.some((d) => d.result === "PARTIAL")) {
+      return "half";
+    }
+
+    if (finalizedDays.length === data.days.length && finalizedDays.every((d) => d.result === "DONE")) {
+      return "success";
+    }
+
+    return "default";
+  };
+
+  // 아이콘 경로 생성
+  const getIconPath = (): string => {
+    const level = getAchievementLevel();
+    return `/badge/${level}-${data.categoryIconKey}.svg`;
   };
 
   return (
     <div className="bg-white rounded-[10px] p-3 flex flex-col items-center">
-      <div className="w-12 h-12 text-4xl">{getIcon(data.categoryIconKey)}</div>
+      {/* 아이콘만 등급에 따라 변경 */}
+      <img src={getIconPath()} alt={data.category} className="w-12 h-12" />
 
-      {/* 진행도 */}
-      <div className="flex gap-1.5 mb-2">
+      <div className="flex gap-1.5 mb-2 mt-2">
         {data.days.map((day) => (
-          <div key={day.dayIndex} className={`w-4 h-4 rounded-full ${day.finalized ? "bg-[#FFBF3F]" : "bg-[#E8E6E5]"}`} />
+          <div key={day.dayIndex} className={`w-4 h-4 rounded-full ${getStatusColor(day.result, day.finalized)}`} />
         ))}
       </div>
 
-      {/* D+N 표시 */}
       <div className="text-[#315762] text-5xl font-semibold mb-2">
         D+{currentDay}
         <span className="text-[15px] text-[#736E67]">/{data.days.length}</span>
       </div>
 
-      {/* 상태 뱃지 */}
+      {/* 뱃지는 진행중/진행완료만 */}
       <Button label={data.runStatus === "IN_PROGRESS" ? "진행중" : "진행완료"} variant={data.runStatus === "IN_PROGRESS" ? "progress" : "complete"} />
     </div>
   );

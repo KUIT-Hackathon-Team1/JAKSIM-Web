@@ -29,16 +29,16 @@ const MyGoal = () => {
   const mockGoalData: GoalRunResponse = {
     runId: 1,
     goalId: 1,
-    goalTitle: "운동하기",
-    category: "운동",
+    goalTitle: "하루 10분 스트레칭",
+    category: "EXERCISE",
     categoryIconKey: "weight",
     runStatus: "IN_PROGRESS",
     startDate: "2026-01-07",
     expectedEndDate: "2026-01-09",
     days: [
-      { dayIndex: 1, date: "2026-01-07", result: "", finalized: true },
-      { dayIndex: 2, date: "2026-01-08", result: "", finalized: true },
-      { dayIndex: 3, date: "2026-01-09", result: "", finalized: false },
+      { dayIndex: 1, date: "2026-01-07", result: "FAIL", finalized: true },
+      { dayIndex: 2, date: "2026-01-08", result: "PARTIAL", finalized: true },
+      { dayIndex: 3, date: "2026-01-09", result: "DONE", finalized: false },
     ],
   };
 
@@ -77,7 +77,7 @@ const MyGoal = () => {
 
   return (
     <div className="min-h-screen bg-[#FEF6EE]">
-      <Header title="내 목표" onBack={() => navigate("/home")} onEdit={() => console.log("수정")} onComplete={() => console.log("종료")} />
+      <Header title="내 목표" onBack={() => navigate("/home")} onEdit={() => navigate("/goal/modify")} onComplete={() => console.log("종료")} />
 
       <div className="p-2 space-y-3">
         {goals.map((goal) => (
