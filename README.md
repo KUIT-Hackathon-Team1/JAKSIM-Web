@@ -1,73 +1,33 @@
-# React + TypeScript + Vite
+# 🏃 작심삼일 (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **"3일씩 꾸준하게 나아가자."**
+> 생성형 AI(Google Gemini) 기반 목표 달성 및 습관 형성 웹 서비스
 
-Currently, two official plugins are available:
+## 📖 프로젝트 소개 (Project Description)
+**작심삼일 클라이언트**는 사용자가 목표를 쉽게 설정하고 3일간의 여정을 시각적으로 확인할 수 있는 웹 애플리케이션입니다.
+복잡한 입력 과정을 최소화한 **직관적인 UI**와, 사용자 경험(UX)을 극대화했습니다. AI가 추천해준 목표를 인터랙티브하게 선택하고, 실시간으로 달성 현황을 트래킹할 수 있습니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠 기술 스택 (Tech Stack)
 
-## React Compiler
+### Core
+- **TypeScript**
+- **React 19**
+- **Vite**
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Styling
+- **Tailwind CSS**
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 📂 주요 기능 (Key Features)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1.  **🎚️ 실시간 난이도 피드백 (Adaptive Difficulty Control)**
+    - 추천된 목표가 너무 어렵거나 쉽다고 느껴질 경우, **"더 쉽게 / 더 어렵게"** 버튼을 통해 즉시 수정을 요청할 수 있습니다.
+    - 사용자의 피드백을 반영하여 AI가 목표의 강도를 재조정하고 새로운 솔루션을 제안합니다.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2.  **🏆 게이미피케이션 대시보드 (Gamified Dashboard)**
+    - 3일간의 진행 상황(성공/실패/보류)을 직관적인 스탬프 UI로 시각화합니다.
+    - 챌린지 종료 시 획득한 티어(GOLD, BRONZE, FAIL)에 따른 결과 모달 및 애니메이션을 제공합니다.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
