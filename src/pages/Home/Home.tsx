@@ -188,7 +188,6 @@ const Home = () => {
                             result: (badge as any).border?.[2] ? mapBorderToResult((badge as any).border[2]) : "DEFAULT",
                           },
                         ]}
-                        onClick={() => navigate(`/goal/${(badge as any).runId}`)}
                       />
                     </div>
                   ))}
@@ -248,7 +247,6 @@ const Home = () => {
                             result: (badge as any).border?.[2] ? mapBorderToResult((badge as any).border[2]) : "DEFAULT",
                           },
                         ]}
-                        onClick={() => navigate(`/goal/${(badge as any).runId}`)}
                       />
                     </div>
                   ))}
