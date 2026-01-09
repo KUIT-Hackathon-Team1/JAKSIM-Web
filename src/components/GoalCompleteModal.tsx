@@ -46,11 +46,11 @@ export const GoalCompleteModal = ({
         </div>
 
         {/* 난이도 조절 버튼 */}
-        <div className="flex gap-3 mb-3 text-[16px]">
+        <div className="flex gap-2 mb-3 text-[16px]">
           <div className="flex-1">
             <button
               onClick={onLowerDifficulty}
-              className="bg-white text-[#E9631A] h-[50px] w-full rounded-[20px] border-[1.5px] border-[#E9631A] cursor-pointer"
+              className="bg-white text-[#E9631A] font-semibold h-13 w-full rounded-[20px] border-2 border-[#E9631A] cursor-pointer"
             >
               난이도
               <br />
@@ -61,7 +61,7 @@ export const GoalCompleteModal = ({
           <div className="flex-1">
             <button
               onClick={onMaintain}
-              className="bg-white text-[#E9631A] h-[50px]  w-full rounded-[20px] border-[1.5px] border-[#E9631A] cursor-pointer"
+              className="bg-white text-[#E9631A] font-semibold h-13  w-full rounded-[20px] border-2 border-[#E9631A] cursor-pointer"
             >
               유지하기
               <br />
@@ -69,10 +69,10 @@ export const GoalCompleteModal = ({
           </div>
 
           <div className="relative flex-1">
-            <span className="absolute -top-4 right-6 text-[#E9631A] text-xs px-2 py-0.5 rounded-full z-10">추천</span>
+            <span className="absolute -top-4.5 right-7 text-[#E9631A] text-xs px-2 py-0.5 rounded-full z-10">추천</span>
             <button
               onClick={onIncreaseDifficulty}
-              className="bg-white text-[#E9631A] h-[50px] w-full rounded-[20px] border-[1.5px] border-[#E9631A] cursor-pointer"
+              className="bg-white text-[#E9631A] font-semibold h-13 w-full rounded-[20px] border-2 border-[#E9631A] cursor-pointer"
             >
               난이도 <br />
               높이기

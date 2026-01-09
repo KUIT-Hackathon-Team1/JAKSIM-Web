@@ -108,7 +108,7 @@ const MyGoal = () => {
 
       <DayMemo startDate={mockGoalData.startDate} initialDay={currentDay as 1 | 2 | 3} />
 
-      <div className="px-3">
+      <div className="px-3 pb-3">
         <ActionButton variant="outline" onClick={handleDayEnd}>
           하루 끝내기
         </ActionButton>
@@ -123,17 +123,17 @@ const MyGoal = () => {
         onLowerDifficulty={() => {
           console.log("난이도 낮추기");
           setShowCompleteModal(false);
-          navigate("/home");
+          navigate("/goal/continue", { state: { difficulty: "lower" } });
         }}
         onMaintain={() => {
           console.log("유지하기");
           setShowCompleteModal(false);
-          navigate("/home");
+          navigate("/goal/continue", { state: { difficulty: "maintain" } });
         }}
         onIncreaseDifficulty={() => {
           console.log("난이도 높이기");
           setShowCompleteModal(false);
-          navigate("/home");
+          navigate("/goal/continue", { state: { difficulty: "increase" } });
         }}
         onNewGoal={() => {
           console.log("새로운 목표");
