@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 
+// 1. API 명세서에 따른 인터페이스 정의
 interface Summary {
   completedLoops: number;
   streakDays: number;
@@ -17,6 +18,8 @@ interface Badge {
   startDate: string;
   expectedEndDate: string;
   endedAt: string | null;
+  result?: "SUCCESS" | "FAIL" | "DEFAULT" | "HALF";
+  memo?: string;
 }
 
 interface HomeResponse {
@@ -46,25 +49,26 @@ const useHomeData = () => {
     // 현재는 명세서의 샘플 데이터를 Mock 데이터로 세팅합니다.
     const mockResponse: HomeResponse = {
       summary: {
-        completedLoops: 4, // 테스트를 위해 4개로 설정
-        streakDays: 4,
-        achievementRate: 80,
+        completedLoops: 0,
+        streakDays: 0,
+        achievementRate: 0,
       },
       hasInProgress: false,
       newGoalIconKey: "star",
       badges: [
-        {
-          runId: 1,
-          goalId: 10,
-          goalTitle: "하루 10분 스트레칭",
-          category: "EXERCISE",
-          categoryIconKey: "weight",
-          runStatus: "IN_PROGRESS",
-          tierStatus: null,
-          startDate: "2026-01-09",
-          expectedEndDate: "2026-01-11",
-          endedAt: null,
-        },
+        // 테스트 4개
+        // {
+        //   runId: 1,
+        //   goalId: 10,
+        //   goalTitle: "하루 10분 스트레칭",
+        //   category: "EXERCISE",
+        //   categoryIconKey: "weight",
+        //   runStatus: "IN_PROGRESS",
+        //   tierStatus: null,
+        //   startDate: "2026-01-09",
+        //   expectedEndDate: "2026-01-11",
+        //   endedAt: null,
+        // },
       ],
     };
 
