@@ -208,17 +208,15 @@ const Home = () => {
                       <ProgressRing result="DEFAULT" angle={240} />
 
                       <img
-                        src={icDefaultBadge}
-                        alt="default badge"
+                        src={`/badge/default-empty.svg`}
+                        alt="gold-star"
                         className="absolute w-[79px] h-[76px] object-contain"
                       />
 
                       <button
                         onClick={() => navigate("/goal/new")}
                         className="relative z-10 w-[51px] h-[51px] flex items-center justify-center active:scale-95 transition-transform"
-                      >
-                        <img src={`/badge/default-empty.svg`} alt="goal star" />
-                      </button>
+                      ></button>
                     </div>
                   </div>
                 </div>
