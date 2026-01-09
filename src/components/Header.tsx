@@ -3,7 +3,7 @@
 import { useState } from "react";
 import QuitGoalModal from "./QuitGoalModal";
 
-interface HeaderProps {
+export interface HeaderProps {
   title: string;
   onBack?: () => void;
   onEdit: () => void;
