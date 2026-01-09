@@ -32,7 +32,6 @@ const GoalNewForm = () => {
           baseGoalId: null,
           action: "UP",
         };
-        console.log("서버로 보내는 최종 데이터:", requestData);
 
         const result = await goalsApi.getRecommendations(requestData);
 
@@ -45,15 +44,8 @@ const GoalNewForm = () => {
         }
       } catch (err) {
         console.error("목표 추천 불러오기 실패:", err);
-        // 실패하면 목 데이터
-        const mockData = [
-          "하루 15분 스트레칭",
-          "하루 10분 걷기",
-          "자기 전 5분 코어 운동",
-        ];
-        setSuggestions(
-          mockData.map((title, index) => ({ id: index + 1, title }))
-        );
+        const mockData = ["하루 15분 스트레칭", "하루 10분 걷기", "자기 전 5분 코어 운동"];
+        setSuggestions(mockData.map((title, index) => ({ id: index + 1, title })));
       }
     };
 
@@ -64,34 +56,35 @@ const GoalNewForm = () => {
     setGoalName(title);
   };
 
-  // GoalNewForm.tsx의 handleSave 함수 수정 제안
   const handleSave = async () => {
     if (!goalName.trim()) {
       alert("목표명을 입력해주세요");
       return;
     }
 
-    // 🔍 서버로 보내기 전 데이터 로그 확인
-    const payload = {
-      goalTitle: goalName,
-      goalSubtitle: "",
-      goalCategory: category,
-      intent: intent,
-      baseGoalId: null,
-      action: null,
-    };
-
-    console.log("저장 시도 데이터:", payload);
-
     try {
-      const result = await goalsApi.saveGoal(payload);
-      if (result.success) {
-        navigate("/home");
-      } else {
+      const savePayload = {
+        goalTitle: goalName,
+        goalCategory: category,
+        intent: intent,
+        baseGoalId: null,
+        action: null,
+      };
+
+      const saveResult = await goalsApi.saveGoal(savePayload);
+
+      if (!saveResult.success) {
         alert("목표 저장에 실패했습니다.");
+        return;
       }
+
+      const runResult = await goalsApi.startRun();
+      const runId = runResult.runId;
+
+      // 목표 상세 페이지로 이동
+      navigate(`/goal/${runId}`);
     } catch (err) {
-      console.error("목표 저장 실패 상세:", err);
+      console.error("목표 저장/시작 실패:", err);
       alert("목표 저장에 실패했습니다.");
     }
   };
@@ -110,9 +103,7 @@ const GoalNewForm = () => {
         <GoalNameInput value={goalName} onChange={setGoalName} />
 
         <div className="py-2">
-          <p className="text-[14px] font-semibold text-[#252422]">
-            ⭐ 이번 3일 목표 AI 추천
-          </p>
+          <p className="text-[14px] font-semibold text-[#252422]">⭐ 이번 3일 목표 AI 추천</p>
           <p className="text-[12px] text-[#8E8E8E] mt-1">
             AI가 추천해주는 이번 3일 목표입니다.
             <br />
@@ -122,11 +113,7 @@ const GoalNewForm = () => {
 
         <div className="">
           {suggestions.map((suggestion) => (
-            <GoalSuggestionCard
-              key={suggestion.id}
-              title={suggestion.title}
-              onClick={() => handleSuggestionClick(suggestion.title)}
-            />
+            <GoalSuggestionCard key={suggestion.id} title={suggestion.title} onClick={() => handleSuggestionClick(suggestion.title)} />
           ))}
         </div>
       </div>

@@ -26,7 +26,7 @@ const router = createBrowserRouter([
     element: <GoalNewConfirm />,
   },
   {
-    path: "/goal/:id",
+    path: "/goal/:runId",
     element: <MyGoal />,
   },
   {
