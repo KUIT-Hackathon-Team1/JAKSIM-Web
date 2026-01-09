@@ -21,12 +21,12 @@ const GoalNameInput = ({ value, onChange }: GoalNameInputProps) => {
       </div>
 
       {/* AI 추천 섹션 */}
-      <div className="mb-2">
+      <div>
         <div className="flex items-center gap-2">
           <span className="text-[13px]">⭐</span>
           <h2 className="text-[13px] font-semibold text-[#252422]">이번 3일 목표 AI 추천</h2>
         </div>
-        <p className="text-[12px] text-[#989898] mb-3 pl-8">AI가 추천해주는 이번 3일 목표입니다.</p>
+        <p className="text-[12px] text-[#989898] pl-8">AI가 추천해주는 이번 3일 목표입니다.</p>
       </div>
     </div>
   );

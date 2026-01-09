@@ -4,6 +4,7 @@ import Home from "./Home/Home";
 import GoalNew from "./GoalNew/GoalNew";
 import MyGoal from "./MyGoal/MyGoal";
 import Test from "./Test/Test";
+import GoalContinue from "./GoalContinue/GoalContinue";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "/test",
     element: <Test />,
+  },
+  {
+    path: "/goal/continue",
+    element: <GoalContinue />,
   },
 ]);
 
