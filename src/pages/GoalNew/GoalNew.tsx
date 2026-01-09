@@ -21,7 +21,7 @@ const GoalNew = () => {
 
       <div className="m-3 bg-white rounded-[10px]">
         {/* 안내 문구 */}
-        <div className=" px-3 py-5">
+        <div className="px-3 py-5">
           <p className="text-[16px] text-[#252422] font-semibold">
             작심삼일이 목표를 3일 단위로 쪼개줄게요.
             <br />
@@ -36,7 +36,9 @@ const GoalNew = () => {
       {/* 하단 버튼 */}
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px]">
         <div className="flex m-3 gap-2">
-          <ActionButton variant="disabled">취소</ActionButton>
+          <ActionButton variant="disabled" onClick={() => navigate("/home")}>
+            취소
+          </ActionButton>
           <ActionButton variant="primary" onClick={() => navigate("/goal/new/confirm")}>
             다음으로
           </ActionButton>

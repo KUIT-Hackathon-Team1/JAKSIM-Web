@@ -2,6 +2,7 @@ import { useState } from "react";
 import GoalNameInput from "../components/GoalNameInput";
 import GoalSuggestionCard from "./GoalSuggestionCard";
 import { ActionButton } from "./ActionButton";
+import { useNavigate } from "react-router-dom";
 
 interface GoalContinueFormProps {
   value: string;
@@ -11,6 +12,7 @@ interface GoalContinueFormProps {
 
 const GoalContinueForm = ({ value, onChange, difficulty }: GoalContinueFormProps) => {
   const [goalName, setGoalName] = useState("");
+  const navigate = useNavigate();
 
   const difficultyText = {
     lower: "낮추기",
@@ -66,7 +68,7 @@ const GoalContinueForm = ({ value, onChange, difficulty }: GoalContinueFormProps
             <textarea
               value={value}
               onChange={(e) => onChange(e.target.value)}
-              placeholder="왜 이 목표를 시작하려고 하나요?"
+              placeholder="최종적으로 어떤 목표를 달성하고 싶나요?"
               maxLength={20}
               className="w-full px-3 py-3 bg-[#F6F5F5] rounded-[10px] resize-none h-18 focus:outline-none text-[12px] placeholder:text-[#989898]"
             />
@@ -74,9 +76,13 @@ const GoalContinueForm = ({ value, onChange, difficulty }: GoalContinueFormProps
           </div>
         </div>
       </div>
-      <div className="flex m-3 gap-2">
-        <ActionButton variant="disabled">취소</ActionButton>
-        <ActionButton variant="primary">저장</ActionButton>
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px]">
+        <div className="flex m-3 gap-2">
+          <ActionButton variant="disabled" onClick={() => navigate("/goal/:id")}>
+            취소
+          </ActionButton>
+          <ActionButton variant="primary">저장</ActionButton>
+        </div>
       </div>
     </>
   );
