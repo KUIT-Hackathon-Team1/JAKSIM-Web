@@ -14,7 +14,9 @@ import { goalsApi } from "../../api/goals";
 const MyGoal = () => {
   const navigate = useNavigate();
   const { runId } = useParams<{ runId: string }>();
-  const [selectedAchieve, setSelectedAchieve] = useState<"complete" | "partial" | "failed" | null>(null);
+  const [selectedAchieve, setSelectedAchieve] = useState<
+    "complete" | "partial" | "failed" | null
+  >(null);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [memo, setMemo] = useState("");
   const [goalData, setGoalData] = useState<GoalRunResponse | null>(null);
@@ -103,11 +105,15 @@ const MyGoal = () => {
       };
 
       const currentDay = getCurrentDay();
-      const updatedData = await goalsApi.updateDayResult(goalData.runId, currentDay, {
-        result: resultMap[selectedAchieve],
-        memo: memo,
-        finalizeDay: true,
-      });
+      const updatedData = await goalsApi.updateDayResult(
+        goalData.runId,
+        currentDay,
+        {
+          result: resultMap[selectedAchieve],
+          memo: memo,
+          finalizeDay: true,
+        }
+      );
 
       setGoalData(updatedData);
 
@@ -181,11 +187,19 @@ const MyGoal = () => {
             state={selectedAchieve === "partial" ? "selected" : "default"}
             onClick={() => setSelectedAchieve("partial")}
           />
-          <AchieveButton type="failed" state={selectedAchieve === "failed" ? "selected" : "default"} onClick={() => setSelectedAchieve("failed")} />
+          <AchieveButton
+            type="failed"
+            state={selectedAchieve === "failed" ? "selected" : "default"}
+            onClick={() => setSelectedAchieve("failed")}
+          />
         </div>
       </div>
 
-      <DayMemo startDate={goalData.startDate} initialDay={currentDay as 1 | 2 | 3} onMemoChange={(day, memoText) => setMemo(memoText)} />
+      <DayMemo
+        startDate={goalData.startDate}
+        initialDay={currentDay as 1 | 2 | 3}
+        onMemoChange={(day, memoText) => setMemo(memoText)}
+      />
 
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px]">
         <div className="px-3 pb-3">
@@ -198,7 +212,10 @@ const MyGoal = () => {
       <GoalCompleteModal
         isOpen={showCompleteModal}
         onClose={() => setShowCompleteModal(false)}
-        categoryIcon={getCategoryIconPath(goalData.category, goalData.categoryIconKey)}
+        categoryIcon={getCategoryIconPath(
+          goalData.category,
+          goalData.categoryIconKey
+        )}
         medalType={getMedalType()}
         onLowerDifficulty={() => {
           console.log("난이도 낮추기");
