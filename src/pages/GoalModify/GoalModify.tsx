@@ -11,7 +11,7 @@ const GoalModify = () => {
     <div className="min-h-screen bg-[#FEF6EE] ">
       <header className="h-13 grid grid-cols-[1fr_auto_1fr] items-center bg-white border-b border-gray-100 px-4">
         <div className="flex justify-start">
-          <button aria-label="back" onClick={() => navigate("/goal/:id")} className="cursor-pointer">
+          <button aria-label="back" onClick={() => navigate("/goal/:Runid")} className="cursor-pointer">
             <img src="/arrow-left.svg" alt="뒤로가기" />
           </button>
         </div>

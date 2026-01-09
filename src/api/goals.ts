@@ -5,6 +5,8 @@ import type {
   GoalRecommendationResponse,
   GoalSaveRequest,
   GoalSaveResponse,
+  GoalUpdateRequest,
+  GoalUpdateResponse,
 } from "./types";
 
 const API_BASE_URL = "http://13.124.238.240:8080/api";
@@ -112,6 +114,24 @@ export const goalsApi = {
 
     if (!response.ok) {
       throw new Error("목표 포기 실패");
+    }
+
+    return response.json();
+  },
+
+  // PATCH : 목표 수정하기
+  updateGoal: async (goalId: number, request: GoalUpdateRequest): Promise<GoalUpdateResponse> => {
+    const response = await fetch(`${API_BASE_URL}/goal/${goalId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Device-Id": "test-uuid-1234",
+      },
+      body: JSON.stringify(request),
+    });
+
+    if (!response.ok) {
+      throw new Error("목표 수정 실패");
     }
 
     return response.json();

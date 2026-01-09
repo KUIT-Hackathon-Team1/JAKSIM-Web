@@ -54,12 +54,7 @@ const GoalContinueForm = ({ value, onChange, difficulty }: GoalContinueFormProps
         {/* AI 추천 카드들 */}
         <div className="">
           {suggestions.map((suggestion) => (
-            <GoalSuggestionCard
-              key={suggestion.id}
-              title={suggestion.title}
-              description={suggestion.description}
-              onClick={() => handleSuggestionClick(suggestion.title)}
-            />
+            <GoalSuggestionCard key={suggestion.id} title={suggestion.title} onClick={() => handleSuggestionClick(suggestion.title)} />
           ))}
         </div>
         <div className="border-t border-gray-200 pt-2">
@@ -78,7 +73,7 @@ const GoalContinueForm = ({ value, onChange, difficulty }: GoalContinueFormProps
       </div>
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px]">
         <div className="flex m-3 gap-2">
-          <ActionButton variant="disabled" onClick={() => navigate("/goal/:id")}>
+          <ActionButton variant="disabled" onClick={() => navigate("]/goal/:Runid")}>
             취소
           </ActionButton>
           <ActionButton variant="primary">저장</ActionButton>

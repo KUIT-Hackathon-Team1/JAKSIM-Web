@@ -154,7 +154,7 @@ const MyGoal = () => {
       <Header
         title="내 목표"
         runId={goalData.runId}
-        onBack={() => navigate("/goal/:runId")}
+        onBack={() => navigate("/home")}
         onEdit={() => navigate("/goal/modify")}
         onComplete={() => navigate("/home")}
       />

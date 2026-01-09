@@ -51,3 +51,20 @@ export interface GoalSaveResponse {
   data: number;
   error: string | null;
 }
+
+// 목표 수정 Request
+export interface GoalUpdateRequest {
+  goalTitle: string;
+  intent: string;
+}
+
+// 목표 수정 Response
+export interface GoalUpdateResponse {
+  success: boolean;
+  data: {
+    id: number;
+    title: string;
+    category: string;
+  };
+  error: null;
+}
