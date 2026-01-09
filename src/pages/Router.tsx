@@ -5,6 +5,8 @@ import GoalNew from "./GoalNew/GoalNew";
 import MyGoal from "./MyGoal/MyGoal";
 import Test from "./Test/Test";
 import GoalContinue from "./GoalContinue/GoalContinue";
+import GoalModifiy from "./GoalModify/GoalModify";
+import GoalNewConfirm from "./GoalNewConfirm/GoalNewConfirm";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,10 @@ const router = createBrowserRouter([
     element: <GoalNew />,
   },
   {
+    path: "/goal/new/confirm",
+    element: <GoalNewConfirm />,
+  },
+  {
     path: "/goal/:id",
     element: <MyGoal />,
   },
@@ -30,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/goal/continue",
     element: <GoalContinue />,
+  },
+  {
+    path: "/goal/modify",
+    element: <GoalModifiy />,
   },
 ]);
 
