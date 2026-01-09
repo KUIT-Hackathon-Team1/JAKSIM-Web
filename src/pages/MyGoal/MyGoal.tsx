@@ -9,11 +9,13 @@ import { ActionButton } from "../../components/ActionButton";
 import { GoalCompleteModal } from "../../components/GoalCompleteModal";
 import type { GoalRunResponse } from "../../api/types";
 import { GoalProgressCard } from "../../components/GoalProgressCard";
+import { goalsApi } from "../../api/goals";
 
 const MyGoal = () => {
   const navigate = useNavigate();
   const [selectedAchieve, setSelectedAchieve] = useState<"complete" | "partial" | "failed" | null>(null);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
+  const [memo, setMemo] = useState("");
 
   // 더미 데이터
   const goals: GoalItemProps[] = [
@@ -33,12 +35,12 @@ const MyGoal = () => {
     category: "EXERCISE",
     categoryIconKey: "weight",
     runStatus: "IN_PROGRESS",
-    startDate: "2026-01-07",
-    expectedEndDate: "2026-01-09",
+    startDate: "2026-01-10",
+    expectedEndDate: "2026-01-12",
     days: [
-      { dayIndex: 1, date: "2026-01-07", result: "FAIL", finalized: true },
-      { dayIndex: 2, date: "2026-01-08", result: "PARTIAL", finalized: true },
-      { dayIndex: 3, date: "2026-01-09", result: "DONE", finalized: false },
+      { dayIndex: 1, date: "2026-01-10", result: "NOT_SET", finalized: false },
+      { dayIndex: 2, date: "2026-01-11", result: "NOT_SET", finalized: false },
+      { dayIndex: 3, date: "2026-01-12", result: "NOT_SET", finalized: false },
     ],
   };
 
@@ -66,12 +68,33 @@ const MyGoal = () => {
     return "fail";
   };
 
-  const handleDayEnd = () => {
-    // 마지막 날(3일차)이면 모달 표시
-    if (currentDay === mockGoalData.days.length) {
-      setShowCompleteModal(true);
-    } else {
-      navigate("/home");
+  const handleDayEnd = async () => {
+    // 달성 상태 선택 안 했으면 리턴
+    if (selectedAchieve === null) {
+      return;
+    }
+
+    try {
+      const resultMap = {
+        complete: "SUCCESS" as const,
+        partial: "PARTIAL" as const,
+        failed: "FAIL" as const,
+      };
+
+      await goalsApi.updateDayResult(mockGoalData.runId, currentDay, {
+        result: resultMap[selectedAchieve],
+        memo: memo,
+        finalizeDay: true,
+      });
+
+      // 마지막 날(3일차)이면 모달 표시
+      if (currentDay === mockGoalData.days.length) {
+        setShowCompleteModal(true);
+      } else {
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
@@ -106,7 +129,7 @@ const MyGoal = () => {
         </div>
       </div>
 
-      <DayMemo startDate={mockGoalData.startDate} initialDay={currentDay as 1 | 2 | 3} />
+      <DayMemo startDate={mockGoalData.startDate} initialDay={currentDay as 1 | 2 | 3} onMemoChange={(day, memoText) => setMemo(memoText)} />
 
       <div className="px-3 pb-3">
         <ActionButton variant="outline" onClick={handleDayEnd}>
