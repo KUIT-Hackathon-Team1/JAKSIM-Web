@@ -22,7 +22,6 @@ export const ActionButton = ({ children, variant = "primary", onClick }: ActionB
   return (
     <button
       onClick={onClick}
-      disabled={variant === "disabled"}
       className={`
         w-full
         ${getVariantStyle()}
