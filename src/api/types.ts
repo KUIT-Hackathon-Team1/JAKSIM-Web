@@ -2,22 +2,21 @@ export interface GoalRunResponse {
   runId: number;
   goalId: number;
   goalTitle: string;
+  goalIntent: string;
   category: string;
   categoryIconKey: string;
   runStatus: "IN_PROGRESS" | "COMPLETED";
+  tierStatus: string | null;
   startDate: string;
   expectedEndDate: string;
+  currentDayIndex: number;
   days: Array<{
     dayIndex: number;
     date: string;
     result: string;
     finalized: boolean;
+    memo: string | null;
   }>;
-}
-
-export interface GoalRunRequest {
-  goalId: number;
-  startDate: string;
 }
 
 export interface UpdateDayRequest {
@@ -26,7 +25,6 @@ export interface UpdateDayRequest {
   finalizeDay: boolean;
 }
 
-// AI 목표 추천 Request
 export interface GoalRecommendationRequest {
   goalCategory: string;
   intent: string;
@@ -34,14 +32,12 @@ export interface GoalRecommendationRequest {
   action?: string | null;
 }
 
-// AI 목표 추천 Response
 export interface GoalRecommendationResponse {
   success: boolean;
   data: string[];
   error: string | null;
 }
 
-// 목표 저장 Request
 export interface GoalSaveRequest {
   goalTitle: string;
   goalCategory: string;
@@ -50,9 +46,8 @@ export interface GoalSaveRequest {
   action?: string | null;
 }
 
-// 목표 저장 Response
 export interface GoalSaveResponse {
   success: boolean;
-  data: number; // goalId
+  data: number;
   error: string | null;
 }

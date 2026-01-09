@@ -7,8 +7,7 @@ interface GoalProgressCardProps {
 
 export const GoalProgressCard = ({ data }: GoalProgressCardProps) => {
   const getCurrentDay = (): number => {
-    const finalizedDays = data.days.filter((d) => d.finalized).length;
-    return finalizedDays === data.days.length ? finalizedDays : finalizedDays + 1;
+    return data.currentDayIndex;
   };
 
   const currentDay = getCurrentDay();
@@ -18,7 +17,7 @@ export const GoalProgressCard = ({ data }: GoalProgressCardProps) => {
     if (!finalized) return "bg-[#E8E6E5]";
 
     switch (result) {
-      case "DONE":
+      case "SUCCESS":
         return "bg-[#FFBF3F]";
       case "PARTIAL":
         return "bg-[#315762]";
@@ -45,22 +44,33 @@ export const GoalProgressCard = ({ data }: GoalProgressCardProps) => {
       return "half";
     }
 
-    if (finalizedDays.length === data.days.length && finalizedDays.every((d) => d.result === "DONE")) {
+    if (finalizedDays.length === data.days.length && finalizedDays.every((d) => d.result === "SUCCESS")) {
       return "success";
     }
 
     return "default";
   };
 
+  // 아이콘 파일명 매핑
+  const getIconFileName = (iconKey: string): string => {
+    const iconMap: Record<string, string> = {
+      exercise: "weight",
+      health: "health",
+      language: "language",
+      self_dev: "self-development",
+    };
+    return iconMap[iconKey.toLowerCase()] || iconKey;
+  };
+
   // 아이콘 경로 생성
   const getIconPath = (): string => {
     const level = getAchievementLevel();
-    return `/badge/${level}-${data.categoryIconKey}.svg`;
+    const fileName = getIconFileName(data.categoryIconKey);
+    return `/badge/${level}-${fileName}.svg`;
   };
 
   return (
     <div className="bg-white rounded-[10px] p-3 flex flex-col items-center">
-      {/* 아이콘만 등급에 따라 변경 */}
       <img src={getIconPath()} alt={data.category} className="w-12 h-12" />
 
       <div className="flex gap-1.5 mb-2 mt-2">
@@ -74,7 +84,6 @@ export const GoalProgressCard = ({ data }: GoalProgressCardProps) => {
         <span className="text-[15px] text-[#736E67]">/{data.days.length}</span>
       </div>
 
-      {/* 뱃지는 진행중/진행완료만 */}
       <Button label={data.runStatus === "IN_PROGRESS" ? "진행중" : "진행완료"} variant={data.runStatus === "IN_PROGRESS" ? "progress" : "complete"} />
     </div>
   );
