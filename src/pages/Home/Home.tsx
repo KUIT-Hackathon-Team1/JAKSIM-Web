@@ -56,48 +56,46 @@ const Home = () => {
           </div>
         )}
 
-        <div className="relative z-10 px-6 pt-6 flex flex-col items-center">
+        <div className="relative z-10 flex flex-col items-center w-full">
           {/* 통계 카드 영역 */}
-          <section className="bg-white rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex justify-between items-center mx-8 mt-2 border border-gray-50">
+          <section className="bg-white h-20 rounded-2xl shadow-[0_10px_10px_-6px_rgba(0,0,0,0.07)] flex justify-between items-center w-[calc(100%-64px)] mt-2 border border-gray-50">
             {/* 완료 루프: 뱃지의 수 */}
             <div className="flex flex-col items-center flex-1 border-r border-gray-100 py-2">
               <div className="flex items-center gap-1.5 mb-2">
                 <img src={icLoop} alt="loop" className="w-4 h-4" />
-                <span className="text-[11px] font-medium text-gray-500">
+                <span className="text-[12px] font-medium text-black">
                   완료 루프
                 </span>
               </div>
-              <span className="text-xl font-bold text-gray-800">
+              <span className="text-xl font-bold text-black">
                 {summary.completedLoops}
               </span>
             </div>
-
             {/* 연속 달성: 목표 달성 일수 */}
             <div className="flex flex-col items-center flex-1 border-r border-gray-100 py-2">
               <div className="flex items-center gap-1.5 mb-2">
                 <img src={icStreak} alt="streak" className="w-4 h-4" />
-                <span className="text-[11px] font-medium text-gray-500">
+                <span className="text-[12px] font-medium text-black">
                   연속 달성
                 </span>
               </div>
               <div className="flex items-baseline gap-0.5">
-                <span className="text-xl font-bold text-gray-800">
+                <span className="text-xl font-bold text-black">
                   {summary.streakDays}
                 </span>
                 <span className="text-xs text-gray-600 font-medium">일</span>
               </div>
             </div>
-
             {/* 내 달성률 */}
             <div className="flex flex-col items-center flex-1 py-2">
               <div className="flex items-center gap-1.5 mb-2">
                 <img src={icTrophy} alt="trophy" className="w-4 h-4" />
-                <span className="text-[11px] font-medium text-gray-500">
+                <span className="text-[12px] font-medium text-black">
                   내 달성률
                 </span>
               </div>
               <div className="flex items-baseline gap-0.5">
-                <span className="text-xl font-bold text-gray-800">
+                <span className="text-xl font-bold text-black">
                   {summary.achievementRate}
                 </span>
                 <span className="text-xs text-gray-600 font-medium">%</span>
@@ -109,7 +107,7 @@ const Home = () => {
           {!hasInProgress && badges.length === 0 && (
             <div className="mb-10 flex flex-col items-center">
               {/* 안내 텍스트 */}
-              <div className="text-center mb-10">
+              <div className="text-center mt-30 mb-10">
                 <p className="text-black font-medium text-base mb-1">
                   아직 계획한 목표가 없어요
                 </p>
