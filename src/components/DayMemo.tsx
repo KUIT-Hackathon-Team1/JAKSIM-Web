@@ -14,7 +14,18 @@ export const DayMemo = ({ startDate, initialDay = 1, onMemoChange }: DayMemoProp
     3: "",
   });
 
-  //날짜 계산
+  // 현재까지 지난 날짜 계산
+  const getCurrentDay = (): number => {
+    const start = new Date(startDate);
+    const today = new Date();
+    const diffTime = today.getTime() - start.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    return Math.max(1, Math.min(diffDays, 3));
+  };
+
+  const maxDay = getCurrentDay();
+
+  // 날짜 계산
   const getDateForDay = (day: number) => {
     const date = new Date(startDate);
     date.setDate(date.getDate() + (day - 1));
@@ -29,7 +40,10 @@ export const DayMemo = ({ startDate, initialDay = 1, onMemoChange }: DayMemoProp
   };
 
   const handleDayClick = (day: 1 | 2 | 3) => {
-    setSelectedDay(day);
+    // 지난 날짜만 클릭 가능
+    if (day <= maxDay) {
+      setSelectedDay(day);
+    }
   };
 
   const handleMemoChange = (value: string) => {
@@ -49,7 +63,14 @@ export const DayMemo = ({ startDate, initialDay = 1, onMemoChange }: DayMemoProp
           <button
             key={day}
             onClick={() => handleDayClick(day)}
-            className={`px-6 py-1 rounded-t-2xl font-semibold text-lg ${selectedDay === day ? "bg-white text-[#315762]" : "bg-[#FFBF3F] text-white"}`}
+            disabled={day > maxDay}
+            className={`px-6 py-1 rounded-t-2xl font-semibold text-lg ${
+              selectedDay === day
+                ? "bg-white text-[#315762]"
+                : day > maxDay
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-[#FFBF3F] text-white"
+            }`}
           >
             D+{day}
           </button>
