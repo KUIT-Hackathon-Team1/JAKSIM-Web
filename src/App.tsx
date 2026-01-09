@@ -1,9 +1,12 @@
 import Router from "./pages/Router";
+import AppLayout from "./layouts/AppLayout";
 
 function App() {
   return (
     <>
-      <Router />
+      <AppLayout>
+        <Router />
+      </AppLayout>
     </>
   );
 }

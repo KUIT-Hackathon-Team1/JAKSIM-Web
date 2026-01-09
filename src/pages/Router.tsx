@@ -3,6 +3,7 @@ import Landing from "./Landing/Landing";
 import Home from "./Home/Home";
 import GoalNew from "./GoalNew/GoalNew";
 import MyGoal from "./MyGoal/MyGoal";
+import Test from "./Test/Test";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: "/goal/:id",
     element: <MyGoal />,
+  },
+  {
+    path: "/test",
+    element: <Test />,
   },
 ]);
 
