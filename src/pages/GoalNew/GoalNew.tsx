@@ -3,10 +3,35 @@ import { useNavigate } from "react-router-dom";
 import GoalFormBottom from "../../components/GoalFormBottom";
 import { ActionButton } from "../../components/ActionButton";
 
+// 카테고리 매핑 추가
+const CATEGORY_MAP: { [key: string]: string } = {
+  건강: "HEALTH",
+  언어: "LANGUAGE",
+  운동: "EXERCISE",
+  자기개발: "SELF_DEVELOPMENT",
+};
+
 const GoalNew = () => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [purpose, setPurpose] = useState("");
+
+  const handleNext = () => {
+    if (!selectedCategory) {
+      alert("카테고리를 선택해주세요");
+      return;
+    }
+
+    // 한글 → 영어로 변환
+    const englishCategory = CATEGORY_MAP[selectedCategory];
+
+    navigate("/goal/new/confirm", {
+      state: {
+        category: englishCategory, // 영어로 변환해서 전달
+        intent: purpose,
+      },
+    });
+  };
 
   return (
     <div className="min-h-screen bg-[#FEF6EE] flex flex-col">
@@ -20,7 +45,6 @@ const GoalNew = () => {
       </header>
 
       <div className="m-3 bg-white rounded-[10px]">
-        {/* 안내 문구 */}
         <div className="px-3 py-5">
           <p className="text-[16px] text-[#252422] font-semibold">
             작심삼일이 목표를 3일 단위로 쪼개줄게요.
@@ -28,18 +52,17 @@ const GoalNew = () => {
             달성 목표에 대한 기본 정보를 입력해주세요.
           </p>
         </div>
-        {/* 폼 영역 */}
         <div className="flex-1 m-3">
           <GoalFormBottom selectedCategory={selectedCategory} onCategorySelect={setSelectedCategory} purpose={purpose} onPurposeChange={setPurpose} />
         </div>
       </div>
-      {/* 하단 버튼 */}
+
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px]">
         <div className="flex m-3 gap-2">
           <ActionButton variant="disabled" onClick={() => navigate("/home")}>
             취소
           </ActionButton>
-          <ActionButton variant="primary" onClick={() => navigate("/goal/new/confirm")}>
+          <ActionButton variant="primary" onClick={handleNext}>
             다음으로
           </ActionButton>
         </div>
