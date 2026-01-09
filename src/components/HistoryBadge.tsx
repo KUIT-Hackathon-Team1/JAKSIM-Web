@@ -5,6 +5,7 @@ interface HistoryBadgeProps {
     goalId: number;
     goalTitle?: string;
     category?: string;
+    categoryIconKey?: string;
     runStatus?: string;
   };
   relatedBadges?: {
@@ -29,33 +30,39 @@ const HistoryBadge = ({
           { runId: 3, result: "DEFAULT" as const },
         ];
 
-  // 배지 이미지 결과 결정 (우선순위: FAIL > HALF > SUCCESS)
+  // 배지 이미지 결과 결정 (링 3개가 모두 차있거나 FAIL이 하나라도 있는 경우만 색깔 변경)
   const getOverallResult = () => {
-    // FAIL이 하나라도 있으면 FAIL
+    // FAIL이 하나라도 있으면 FAIL (빨강)
     if (sortedBadges.some((badge) => badge.result === "FAIL")) {
       return "FAIL";
     }
-    // HALF가 하나라도 있고 나머지가 SUCCESS이면 HALF
-    if (sortedBadges.some((badge) => badge.result === "HALF")) {
-      return "HALF";
-    }
-    // 모두 SUCCESS이면 SUCCESS
+    // 모두 SUCCESS이면 SUCCESS (골드)
     if (sortedBadges.every((badge) => badge.result === "SUCCESS")) {
       return "SUCCESS";
     }
-    // 그 외
-    return sortedBadges[0]?.result || "DEFAULT";
+    // 그 외의 경우는 DEFAULT (노랑)
+    return "DEFAULT";
   };
 
   const overallResult = getOverallResult();
 
-  // category를 result와 함께 사용해서 이미지 경로 생성 (전체 결과 사용)
+  // category를 result와 함께 사용해서 이미지 경로 생성 (categoryIconKey 대신 category 사용)
   const getIconPath = () => {
-    const category = badge.category || "empty";
-    return `/badge/${overallResult.toLowerCase()}-${category}.svg`;
+    const categoryKey = badge.categoryIconKey || badge.category || "empty";
+    const iconPath = `/badge/${overallResult.toLowerCase()}-${categoryKey}.svg`;
+    console.log("HistoryBadge - getIconPath:", {
+      goalId: badge.goalId,
+      category: badge.category,
+      categoryIconKey: badge.categoryIconKey,
+      categoryKey,
+      overallResult,
+      iconPath,
+    });
+    return iconPath;
   };
 
   const iconPath = getIconPath();
+
   return (
     <button
       onClick={onClick}

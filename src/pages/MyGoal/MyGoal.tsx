@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/Header";
 import { GoalItem } from "../../components/GoalItem";
 import type { GoalItemProps } from "../../components/GoalItem";
@@ -13,54 +13,76 @@ import { goalsApi } from "../../api/goals";
 
 const MyGoal = () => {
   const navigate = useNavigate();
+  const { runId } = useParams<{ runId: string }>();
   const [selectedAchieve, setSelectedAchieve] = useState<"complete" | "partial" | "failed" | null>(null);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [memo, setMemo] = useState("");
+  const [goalData, setGoalData] = useState<GoalRunResponse | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // 더미 데이터
-  const goals: GoalItemProps[] = [
-    {
-      id: 1,
-      title: "하루 10분 스트레칭",
-      subtitle: "더 유연한 나를 위해서!",
-      category: "운동",
-      categoryIcon: "/weight.svg",
-    },
-  ];
+  // GoalProgressCard용 아이콘 매핑
+  const getCategoryIconPath = (category: string, iconKey: string): string => {
+    const iconMap: Record<string, string> = {
+      exercise: "weight",
+      health: "health",
+      language: "language",
+      self_dev: "self-development",
+    };
 
-  const mockGoalData: GoalRunResponse = {
-    runId: 1,
-    goalId: 1,
-    goalTitle: "하루 10분 스트레칭",
-    category: "EXERCISE",
-    categoryIconKey: "weight",
-    runStatus: "IN_PROGRESS",
-    startDate: "2026-01-10",
-    expectedEndDate: "2026-01-12",
-    days: [
-      { dayIndex: 1, date: "2026-01-10", result: "NOT_SET", finalized: false },
-      { dayIndex: 2, date: "2026-01-11", result: "NOT_SET", finalized: false },
-      { dayIndex: 3, date: "2026-01-12", result: "NOT_SET", finalized: false },
-    ],
+    const fileName = iconMap[iconKey.toLowerCase()] || iconKey;
+    return `/badge/default-${fileName}.svg`;
   };
 
-  // 실제 현재 날짜 기준으로 며칠째인지 계산
+  // 카테고리 배지 아이콘 매핑
+  const getCategoryBadgeIcon = (iconKey: string): string => {
+    const iconMap: Record<string, string> = {
+      exercise: "weight",
+      health: "heart",
+      language: "messages",
+      self_dev: "emoji-happy",
+    };
+    return iconMap[iconKey.toLowerCase()] || iconKey;
+  };
+
+  // 카테고리 한글명 매핑
+  const getCategoryName = (iconKey: string): string => {
+    const nameMap: Record<string, string> = {
+      exercise: "운동",
+      health: "건강",
+      language: "언어",
+      self_dev: "자기개발",
+    };
+    return nameMap[iconKey.toLowerCase()] || iconKey;
+  };
+
+  useEffect(() => {
+    const fetchGoalData = async () => {
+      try {
+        setLoading(true);
+        const data = await goalsApi.getRun(Number(runId));
+        setGoalData(data);
+      } catch (error) {
+        console.error("목표 조회 실패:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (runId) {
+      fetchGoalData();
+    }
+  }, [runId]);
+
   const getCurrentDay = (): number => {
-    const start = new Date(mockGoalData.startDate);
-    const today = new Date();
-    const diffTime = today.getTime() - start.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-
-    // 1~3일 사이로 제한
-    return Math.max(1, Math.min(diffDays, mockGoalData.days.length));
+    if (!goalData) return 1;
+    return goalData.currentDayIndex;
   };
 
-  const currentDay = getCurrentDay();
-
-  // 메달 타입 결정 (달성률에 따라)
   const getMedalType = (): "gold" | "bronze" | "fail" => {
-    const completed = mockGoalData.days.filter((d) => d.finalized).length;
-    const total = mockGoalData.days.length;
+    if (!goalData) return "fail";
+
+    const completed = goalData.days.filter((d) => d.finalized).length;
+    const total = goalData.days.length;
     const rate = completed / total;
 
     if (rate === 1) return "gold";
@@ -69,8 +91,7 @@ const MyGoal = () => {
   };
 
   const handleDayEnd = async () => {
-    // 달성 상태 선택 안 했으면 리턴
-    if (selectedAchieve === null) {
+    if (selectedAchieve === null || !goalData) {
       return;
     }
 
@@ -81,14 +102,16 @@ const MyGoal = () => {
         failed: "FAIL" as const,
       };
 
-      await goalsApi.updateDayResult(mockGoalData.runId, currentDay, {
+      const currentDay = getCurrentDay();
+      const updatedData = await goalsApi.updateDayResult(goalData.runId, currentDay, {
         result: resultMap[selectedAchieve],
         memo: memo,
         finalizeDay: true,
       });
 
-      // 마지막 날(3일차)이면 모달 표시
-      if (currentDay === mockGoalData.days.length) {
+      setGoalData(updatedData);
+
+      if (currentDay === goalData.days.length) {
         setShowCompleteModal(true);
       } else {
         navigate("/home");
@@ -98,9 +121,43 @@ const MyGoal = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#FEF6EE] flex items-center justify-center">
+        <p>로딩 중...</p>
+      </div>
+    );
+  }
+
+  if (!goalData) {
+    return (
+      <div className="min-h-screen bg-[#FEF6EE] flex items-center justify-center">
+        <p>목표를 불러올 수 없습니다.</p>
+      </div>
+    );
+  }
+
+  const currentDay = getCurrentDay();
+
+  const goals: GoalItemProps[] = [
+    {
+      id: goalData.goalId,
+      title: goalData.goalTitle,
+      intent: goalData.goalIntent,
+      category: getCategoryName(goalData.categoryIconKey),
+      categoryIcon: `/${getCategoryBadgeIcon(goalData.categoryIconKey)}.svg`,
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-[#FEF6EE]">
-      <Header title="내 목표" onBack={() => navigate("/home")} onEdit={() => navigate("/goal/modify")} onComplete={() => console.log("종료")} />
+      <Header
+        title="내 목표"
+        runId={goalData.runId}
+        onBack={() => navigate("/goal/:runId")}
+        onEdit={() => navigate("/goal/modify")}
+        onComplete={() => navigate("/home")}
+      />
 
       <div className="p-2 space-y-3">
         {goals.map((goal) => (
@@ -108,9 +165,8 @@ const MyGoal = () => {
         ))}
       </div>
 
-      {/* GoalCard 연결 */}
       <div className="pb-3 px-3">
-        <GoalProgressCard data={mockGoalData} />
+        <GoalProgressCard data={goalData} />
       </div>
 
       <div className="flex justify-center">
@@ -129,19 +185,20 @@ const MyGoal = () => {
         </div>
       </div>
 
-      <DayMemo startDate={mockGoalData.startDate} initialDay={currentDay as 1 | 2 | 3} onMemoChange={(day, memoText) => setMemo(memoText)} />
+      <DayMemo startDate={goalData.startDate} initialDay={currentDay as 1 | 2 | 3} onMemoChange={(day, memoText) => setMemo(memoText)} />
 
-      <div className="px-3 pb-3">
-        <ActionButton variant="outline" onClick={handleDayEnd}>
-          하루 끝내기
-        </ActionButton>
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px]">
+        <div className="px-3 pb-3">
+          <ActionButton variant="outline" onClick={handleDayEnd}>
+            하루 끝내기
+          </ActionButton>
+        </div>
       </div>
 
-      {/* 완료 모달 */}
       <GoalCompleteModal
         isOpen={showCompleteModal}
         onClose={() => setShowCompleteModal(false)}
-        categoryIcon="/weight.svg"
+        categoryIcon={getCategoryIconPath(goalData.category, goalData.categoryIconKey)}
         medalType={getMedalType()}
         onLowerDifficulty={() => {
           console.log("난이도 낮추기");

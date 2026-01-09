@@ -2,17 +2,30 @@
 
 import { useState } from "react";
 import QuitGoalModal from "./QuitGoalModal";
+import { goalsApi } from "../api/goals";
 
 export interface HeaderProps {
   title: string;
+  runId: number;
   onBack?: () => void;
   onEdit: () => void;
   onComplete: () => void;
 }
 
-export default function Header({ title, onBack, onEdit, onComplete }: HeaderProps) {
+export default function Header({ title, runId, onBack, onEdit, onComplete }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleQuitGoal = async () => {
+    try {
+      await goalsApi.giveUpRun(runId);
+      onComplete();
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("목표 종료 중 오류:", error);
+      alert("목표 종료에 실패했습니다.");
+    }
+  };
 
   return (
     <>
@@ -49,7 +62,6 @@ export default function Header({ title, onBack, onEdit, onComplete }: HeaderProp
                   </button>
                   <button
                     onClick={() => {
-                      onComplete();
                       setIsModalOpen(true);
                       setIsMenuOpen(false);
                     }}
@@ -63,7 +75,7 @@ export default function Header({ title, onBack, onEdit, onComplete }: HeaderProp
           </div>
         </div>
       </header>
-      <QuitGoalModal isOpen={isModalOpen} onConfirm={() => console.log("d")} onClose={() => setIsModalOpen(false)} />
+      <QuitGoalModal isOpen={isModalOpen} onConfirm={handleQuitGoal} onClose={() => setIsModalOpen(false)} />
     </>
   );
 }
