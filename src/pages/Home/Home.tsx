@@ -6,7 +6,6 @@ import icPathTrail from "../../assets/road.svg";
 import icLoop from "../../assets/ic-loop.svg";
 import icStreak from "../../assets/ic-streak.svg";
 import icTrophy from "../../assets/ic-trophy.svg";
-import icGoalStar from "../../assets/orange-star.svg";
 import icNew from "../../assets/new.svg";
 import icIng from "../../assets/ing.svg";
 import icDefaultBadge from "../../assets/default-badge.svg";
@@ -51,8 +50,10 @@ const Home = () => {
       <main className="flex-1 overflow-y-auto relative scrollbar-hide">
         {/* 배경 곡선 경로 (케이스 2, 3에서만 노출) */}
         {badges.length > 0 && (
-          <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[200px] pointer-events-none z-0">
-            <img src={icPathTrail} alt="road" className="w-full" />
+          <div className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[200px] pointer-events-none z-0 flex flex-col items-center">
+            {[...Array(5)].map((_, i) => (
+              <img key={i} src={icPathTrail} alt="road" className="w-[150px]" />
+            ))}
           </div>
         )}
 
@@ -61,7 +62,7 @@ const Home = () => {
           <section className="bg-white h-20 rounded-2xl shadow-[0_10px_10px_-6px_rgba(0,0,0,0.07)] flex justify-between items-center w-[calc(100%-64px)] mt-2 border border-gray-50">
             {/* 완료 루프: 뱃지의 수 */}
             <div className="flex flex-col items-center flex-1 border-r border-gray-100 py-2">
-              <div className="flex items-center gap-1.5 mb-2">
+              <div className="flex items-center gap-2 mb-2">
                 <img src={icLoop} alt="loop" className="w-4 h-4" />
                 <span className="text-[12px] font-medium text-black">
                   완료 루프
@@ -73,7 +74,7 @@ const Home = () => {
             </div>
             {/* 연속 달성: 목표 달성 일수 */}
             <div className="flex flex-col items-center flex-1 border-r border-gray-100 py-2">
-              <div className="flex items-center gap-1.5 mb-2">
+              <div className="flex items-center gap-2 mb-2">
                 <img src={icStreak} alt="streak" className="w-4 h-4" />
                 <span className="text-[12px] font-medium text-black">
                   연속 달성
@@ -83,12 +84,12 @@ const Home = () => {
                 <span className="text-xl font-bold text-black">
                   {summary.streakDays}
                 </span>
-                <span className="text-xs text-gray-600 font-medium">일</span>
+                <span className="text-xs text-black font-medium">일</span>
               </div>
             </div>
             {/* 내 달성률 */}
             <div className="flex flex-col items-center flex-1 py-2">
-              <div className="flex items-center gap-1.5 mb-2">
+              <div className="flex items-center gap-2 mb-2">
                 <img src={icTrophy} alt="trophy" className="w-4 h-4" />
                 <span className="text-[12px] font-medium text-black">
                   내 달성률
@@ -98,7 +99,7 @@ const Home = () => {
                 <span className="text-xl font-bold text-black">
                   {summary.achievementRate}
                 </span>
-                <span className="text-xs text-gray-600 font-medium">%</span>
+                <span className="text-xs text-black font-medium">%</span>
               </div>
             </div>
           </section>
@@ -144,7 +145,7 @@ const Home = () => {
                   className="relative z-10 w-[51px] h-[51px] flex items-center justify-center active:scale-95 transition-transform"
                 >
                   <img
-                    src={icGoalStar}
+                    src={`/badge/default-empty.svg`}
                     alt="goal star"
                     className="w-full h-full object-contain"
                   />
@@ -184,11 +185,7 @@ const Home = () => {
                         onClick={() => navigate("/goal/new")}
                         className="relative z-10 w-[51px] h-[51px] flex items-center justify-center active:scale-95 transition-transform"
                       >
-                        <img
-                          src={icGoalStar}
-                          alt="goal star"
-                          className="w-full h-full object-contain"
-                        />
+                        <img src={`/badge/default-empty.svg`} alt="goal star" />
                       </button>
                     </div>
                   </div>

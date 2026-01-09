@@ -1,4 +1,3 @@
-import icDefaultBadge from "../assets/default-badge.svg";
 import ProgressRing from "./ProgressRing";
 
 interface HistoryBadgeProps {
