@@ -28,18 +28,22 @@ export const goalsApi = {
   },
 
   // POST : AI 목표 추천 요청
-  getRecommendations: async (request: GoalRecommendationRequest): Promise<GoalRecommendationResponse> => {
+  getRecommendations: async (
+    request: GoalRecommendationRequest
+  ): Promise<GoalRecommendationResponse> => {
     const response = await fetch(`${API_BASE_URL}/goal/ai`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Device-Id": "test-uuid-1234", // 명세서 필수 헤더
+        "X-Device-Id": "test-uuid-1234",
       },
       body: JSON.stringify(request),
     });
 
     if (!response.ok) {
-      throw new Error("목표 추천 실패");
+      const errorData = await response.json().catch(() => ({}));
+      console.error("서버 에러 상세:", errorData);
+      throw new Error(`목표 추천 실패 (Status: ${response.status})`);
     }
 
     return response.json();
@@ -64,15 +68,22 @@ export const goalsApi = {
   },
 
   // PATCH : 하루 결과 저장
-  updateDayResult: async (runId: number, dayIndex: number, data: UpdateDayRequest): Promise<GoalRunResponse> => {
-    const response = await fetch(`${API_BASE_URL}/progress/runs/${runId}/days/${dayIndex}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Device-Id": "test-uuid-1234",
-      },
-      body: JSON.stringify(data),
-    });
+  updateDayResult: async (
+    runId: number,
+    dayIndex: number,
+    data: UpdateDayRequest
+  ): Promise<GoalRunResponse> => {
+    const response = await fetch(
+      `${API_BASE_URL}/progress/runs/${runId}/days/${dayIndex}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Device-Id": "test-uuid-1234",
+        },
+        body: JSON.stringify(data),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("하루 결과 저장 실패");

@@ -44,7 +44,6 @@ export interface GoalRecommendationResponse {
 // 목표 저장 Request
 export interface GoalSaveRequest {
   goalTitle: string;
-  goalSubtitle: string;
   goalCategory: string;
   intent: string;
   baseGoalId?: number | null;
