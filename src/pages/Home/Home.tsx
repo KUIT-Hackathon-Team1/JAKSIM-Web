@@ -1,52 +1,35 @@
 import { useNavigate } from "react-router-dom";
 import jaksimLogo from "../../assets/logo-jaksim.svg";
 import icBack from "../../assets/ic-back.svg";
+import icPathTrail from "../../assets/road.svg";
+
 import icLoop from "../../assets/ic-loop.svg";
 import icStreak from "../../assets/ic-streak.svg";
 import icTrophy from "../../assets/ic-trophy.svg";
 import icGoalStar from "../../assets/orange-star.svg";
+import icNew from "../../assets/new.svg";
+import icDefaultBadge from "../../assets/default-badge.svg";
 
-const GoalProgressRing = ({ days }: { days: number }) => {
-  // 전체 둘레 계산 (2 * pi * r) -> 반지름 50일 때 약 314
-  const radius = 50;
-  const circumference = 2 * Math.PI * radius;
+// 진행 상황별 이미지 Import
+import icProgressDefault from "../../assets/progress-default.svg";
+import icProgressFail from "../../assets/progress-fail.svg";
+import icProgressHalf from "../../assets/progress-half.svg";
+import icProgressSuccess from "../../assets/progress-success.svg";
 
-  // 3등분한 한 섹션의 길이 (약간의 간격을 위해 2를 뺌)
-  const segmentLength = circumference / 3 - 2;
-  const gapLength = 2; // 섹션 사이의 아주 미세한 간격
+// 컴포넌트
+import HistoryBadge from "../../components/HistoryBadge";
 
-  return (
-    <svg
-      width="106"
-      height="106"
-      viewBox="0 0 120 120"
-      className="absolute -rotate-90"
-    >
-      {[0, 1, 2].map((i) => (
-        <circle
-          key={i}
-          cx="60"
-          cy="60"
-          r={radius}
-          fill="none"
-          stroke={i < days ? "yellow" : "#E8E6E5"} // 성공한 날은 주황색, 아니면 회색
-          strokeWidth="6"
-          strokeDasharray={`${segmentLength} ${circumference - segmentLength}`}
-          strokeDashoffset={-i * (segmentLength + gapLength)}
-          strokeLinecap="round" // 끝부분을 둥글게 처리
-          className="transition-all duration-500"
-        />
-      ))}
-    </svg>
-  );
-};
+// 훅
+import useHomeData from "./hooks/useHomeData";
 
 const Home = () => {
+  const { data: homeData } = useHomeData();
+  const { hasInProgress, badges, summary } = homeData;
+
   const navigate = useNavigate();
-  const hasInProgress = false; // 테스트를 위해 우선 false로 설정
 
   return (
-    <div className="min-h-screen bg-orange-50 flex flex-col">
+    <div className="h-screen bg-[#FDFBF7] flex flex-col overflow-hidden">
       {/* Header: back 아이콘 & 로고 */}
       <header className="h-[53px] p-4 flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-10">
         <button
@@ -59,87 +42,121 @@ const Home = () => {
         <div className="w-8" />
       </header>
 
-      <main className="flex-1 px-6 pt-6">
-        {/* 통계 카드 영역 */}
-        <section className="bg-white rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex justify-between items-center mb-10 border border-gray-50">
-          {/* 완료 루프: 뱃지의 수 */}
-          <div className="flex flex-col items-center flex-1 border-r border-gray-100">
-            <div className="flex items-center gap-1.5 mb-2">
-              <img src={icLoop} alt="loop" className="w-4 h-4" />
-              <span className="text-[11px] font-medium text-gray-500">
-                완료 루프
-              </span>
-            </div>
-            <span className="text-xl font-bold text-gray-800">0</span>
-          </div>
-
-          {/* 연속 달성: 목표 달성 일수 */}
-          <div className="flex flex-col items-center flex-1 border-r border-gray-100">
-            <div className="flex items-center gap-1.5 mb-2">
-              <img src={icStreak} alt="streak" className="w-4 h-4" />
-              <span className="text-[11px] font-medium text-gray-500">
-                연속 달성
-              </span>
-            </div>
-            <div className="flex items-baseline gap-0.5">
-              <span className="text-xl font-bold text-gray-800">0</span>
-              <span className="text-xs text-gray-600 font-medium">일</span>
-            </div>
-          </div>
-
-          {/* 내 달성률 */}
-          <div className="flex flex-col items-center flex-1">
-            <div className="flex items-center gap-1.5 mb-2">
-              <img src={icTrophy} alt="trophy" className="w-4 h-4" />
-              <span className="text-[11px] font-medium text-gray-500">
-                내 달성률
-              </span>
-            </div>
-            <div className="flex items-baseline gap-0.5">
-              <span className="text-xl font-bold text-gray-800">0</span>
-              <span className="text-xs text-gray-600 font-medium">%</span>
-            </div>
-          </div>
-        </section>
-
-        {/* 조건부 렌더링 (목표 미존재 시) */}
-        {!hasInProgress && (
-          <div className="flex flex-col items-center justify-center mt-12">
-            {/* 안내 텍스트 */}
-            <div className="text-center mb-10">
-              <p className="text-black font-medium text-lg mb-1">
-                아직 계획한 목표가 없어요
-              </p>
-              <p className="text-gray-700 text-sm">3일 목표를 같이 계획해요</p>
-            </div>
-            {/* 1. "새 목표 +" 말풍선 버튼 */}
-            <div className="relative mb-6">
-              <button
-                onClick={() => navigate("/goal/new")}
-                className="px-5 py-2 bg-white border-[1.5px] border-[#E9631A] rounded-full text-[#E9631A] text-sm font-bold shadow-sm active:scale-95 transition-transform"
-              >
-                새 목표 +
-              </button>
-              {/* 말풍선 꼬리 부분 */}
-              <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-r-[1.5px] border-b-[1.5px] border-[#E9631A] rotate-45"></div>
-            </div>
-
-            {/* 2. 중앙 별 뱃지 영역 */}
-            <div className="relative w-[106px] h-[106px] flex items-center justify-center">
-              {/* 기존 회색 링 대신 3분할 링 배치 (현재는 진행 전이므로 0일 전달) */}
-              <GoalProgressRing days={0} />
-
-              {/* 안쪽 흰색 원 */}
-              <div className="relative w-[79px] h-[76px] bg-white rounded-full border-[1.5px] border-[#E9631A] flex items-center justify-center shadow-inner">
-                <img
-                  src={icGoalStar}
-                  alt="goal star"
-                  className="w-[51px] h-[51px] object-contain"
-                />
-              </div>
-            </div>
+      <main className="flex-1 overflow-y-auto relative scrollbar-hide">
+        {/* 배경 곡선 경로 (케이스 2, 3에서만 노출) */}
+        {badges.length > 0 && (
+          <div className="absolute top-[350px] left-0 w-full pointer-events-none z-0">
+            <img src={icPathTrail} alt="road" className="w-full" />
           </div>
         )}
+
+        <div className="relative z-10 px-6 pt-6 flex flex-col items-center">
+          {/* 통계 카드 영역 */}
+          <section className="bg-white rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex justify-between items-center mb-10 border border-gray-50">
+            {/* 완료 루프: 뱃지의 수 */}
+            <div className="flex flex-col items-center flex-1 border-r border-gray-100">
+              <div className="flex items-center gap-1.5 mb-2">
+                <img src={icLoop} alt="loop" className="w-4 h-4" />
+                <span className="text-[11px] font-medium text-gray-500">
+                  완료 루프
+                </span>
+              </div>
+              <span className="text-xl font-bold text-gray-800">0</span>
+            </div>
+
+            {/* 연속 달성: 목표 달성 일수 */}
+            <div className="flex flex-col items-center flex-1 border-r border-gray-100">
+              <div className="flex items-center gap-1.5 mb-2">
+                <img src={icStreak} alt="streak" className="w-4 h-4" />
+                <span className="text-[11px] font-medium text-gray-500">
+                  연속 달성
+                </span>
+              </div>
+              <div className="flex items-baseline gap-0.5">
+                <span className="text-xl font-bold text-gray-800">0</span>
+                <span className="text-xs text-gray-600 font-medium">일</span>
+              </div>
+            </div>
+
+            {/* 내 달성률 */}
+            <div className="flex flex-col items-center flex-1">
+              <div className="flex items-center gap-1.5 mb-2">
+                <img src={icTrophy} alt="trophy" className="w-4 h-4" />
+                <span className="text-[11px] font-medium text-gray-500">
+                  내 달성률
+                </span>
+              </div>
+              <div className="flex items-baseline gap-0.5">
+                <span className="text-xl font-bold text-gray-800">0</span>
+                <span className="text-xs text-gray-600 font-medium">%</span>
+              </div>
+            </div>
+          </section>
+          {/* 조건부 렌더링 (목표 미존재 시) */}
+          {!hasInProgress && (
+            <div className="mb-10">
+              {/* 안내 텍스트 */}
+              <div className="text-center mb-10">
+                <p className="text-black font-medium text-lg mb-1">
+                  아직 계획한 목표가 없어요
+                </p>
+                <p className="text-gray-700 text-sm">
+                  3일 목표를 같이 계획해요
+                </p>
+              </div>
+              {/* 1. 새 목표*/}
+              <div className="relative mb-6">
+                <img
+                  src={icNew}
+                  alt="new goal"
+                  className="w-[80px] h-[49px] object-contain"
+                />
+              </div>
+
+              {/* 2. 중앙 별 뱃지 영역 */}
+              <div className="relative w-[106px] h-[106px] flex items-center justify-center">
+                {/* 진행 링 */}
+                <img
+                  src={icProgressDefault}
+                  alt="progress ring"
+                  className="absolute inset-0 w-full h-full"
+                />
+
+                {/* 흰색 원 배경 */}
+                <img
+                  src={icDefaultBadge}
+                  alt="default badge"
+                  className="absolute w-[79px] h-[76px] object-contain"
+                />
+
+                {/* 클릭 가능한 별 아이콘 */}
+                <button
+                  onClick={() => navigate("/goal/new")}
+                  className="relative z-10 w-[51px] h-[51px] flex items-center justify-center active:scale-95 transition-transform"
+                >
+                  <img
+                    src={icGoalStar}
+                    alt="goal star"
+                    className="w-full h-full object-contain"
+                  />
+                </button>
+              </div>
+            </div>
+          )}
+          {/* 이전 진행 이력 리스트 (케이스 2, 3) */}
+          {badges.length > 0 && (
+            <div className="flex flex-col gap-16 pb-20 items-center w-full mt-10">
+              {badges.map((badge, i) => (
+                <div
+                  key={badge.runId}
+                  className={i % 2 === 0 ? "ml-[-60px]" : "mr-[-60px]"}
+                >
+                  <HistoryBadge badge={badge} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );
