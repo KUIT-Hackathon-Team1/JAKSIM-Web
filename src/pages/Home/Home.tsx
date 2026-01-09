@@ -15,7 +15,7 @@ import HistoryBadge from "../../components/HistoryBadge";
 import ProgressRing from "../../components/ProgressRing";
 
 // 훅
-import useHomeData from "./hooks/useHomeData";
+import useHomeData from "../../hooks/useHomeData";
 
 const Home = () => {
   const { data: homeData } = useHomeData();
@@ -56,7 +56,9 @@ const Home = () => {
                   완료 루프
                 </span>
               </div>
-              <span className="text-xl font-bold text-gray-800">0</span>
+              <span className="text-xl font-bold text-gray-800">
+                {summary.completedLoops}
+              </span>
             </div>
 
             {/* 연속 달성: 목표 달성 일수 */}
@@ -68,7 +70,9 @@ const Home = () => {
                 </span>
               </div>
               <div className="flex items-baseline gap-0.5">
-                <span className="text-xl font-bold text-gray-800">0</span>
+                <span className="text-xl font-bold text-gray-800">
+                  {summary.streakDays}
+                </span>
                 <span className="text-xs text-gray-600 font-medium">일</span>
               </div>
             </div>
@@ -82,7 +86,9 @@ const Home = () => {
                 </span>
               </div>
               <div className="flex items-baseline gap-0.5">
-                <span className="text-xl font-bold text-gray-800">0</span>
+                <span className="text-xl font-bold text-gray-800">
+                  {summary.achievementRate}
+                </span>
                 <span className="text-xs text-gray-600 font-medium">%</span>
               </div>
             </div>
