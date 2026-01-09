@@ -5,6 +5,7 @@ interface HistoryBadgeProps {
     goalId: number;
     goalTitle?: string;
     category?: string;
+    categoryIconKey?: string;
     runStatus?: string;
   };
   relatedBadges?: {
@@ -49,13 +50,14 @@ const HistoryBadge = ({
 
   const overallResult = getOverallResult();
 
-  // category를 result와 함께 사용해서 이미지 경로 생성 (전체 결과 사용)
+  // category를 result와 함께 사용해서 이미지 경로 생성 (categoryIconKey 대신 category 사용)
   const getIconPath = () => {
-    const category = badge.category || "empty";
-    return `/badge/${overallResult.toLowerCase()}-${category}.svg`;
+    const categoryKey = badge.categoryIconKey || badge.category || "empty";
+    return `/badge/${overallResult.toLowerCase()}-${categoryKey}.svg`;
   };
 
   const iconPath = getIconPath();
+
   return (
     <button
       onClick={onClick}
