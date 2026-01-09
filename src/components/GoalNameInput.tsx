@@ -26,7 +26,9 @@ const GoalNameInput = ({ value, onChange }: GoalNameInputProps) => {
           <span className="text-[13px]">⭐</span>
           <h2 className="text-[13px] font-semibold text-[#252422]">이번 3일 목표 AI 추천</h2>
         </div>
-        <p className="text-[12px] text-[#989898] pl-8">AI가 추천해주는 이번 3일 목표입니다.</p>
+        <p className="text-[12px] text-[#989898] pl-8">
+          AI가 추천해주는 이번 3일 목표입니다. <br /> 원하는 도전과제를 선택해주세요.
+        </p>
       </div>
     </div>
   );

@@ -19,9 +19,9 @@ const GoalModify = () => {
         <h1 className="text-[18px] font-semibold text-[#3F3E3A] text-center">수정하기</h1>
       </header>
 
-      <div className="p-3 m-3 rounded-[10px] bg-white">
+      <div className="p-2 m-3 rounded-[10px] bg-white">
         {/* 목표명 입력 */}
-        <div className="p-4">
+        <div className="p-3">
           <label className="block text-[16px] font-semibold text-gray-900 mb-2">
             목표명
             <span className="text-[#E9631A]">*</span>
@@ -42,7 +42,7 @@ const GoalModify = () => {
             <textarea
               value={goalIntent}
               onChange={(e) => setGoalIntent(e.target.value)}
-              placeholder="왜 이 목표를 시작하려고 하나요?"
+              placeholder="최종적으로 어떤 목표를 달성하고 싶나요?"
               maxLength={20}
               className="w-full px-3 py-3 bg-[#F6F5F5] rounded-[10px] resize-none h-18 focus:outline-none text-[12px] placeholder:text-[#989898]"
             />
@@ -52,7 +52,7 @@ const GoalModify = () => {
       </div>
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px]">
         <div className="flex gap-2 p-3 ">
-          <ActionButton variant="disabled" onClick={() => navigate("/goal/:id")}>
+          <ActionButton variant="disabled" onClick={() => navigate(-1)}>
             취소
           </ActionButton>
           <ActionButton variant="primary">저장</ActionButton>

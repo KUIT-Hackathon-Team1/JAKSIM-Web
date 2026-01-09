@@ -15,7 +15,7 @@ const GoalFormBottom = ({ selectedCategory, onCategorySelect, purpose, onPurpose
         <label className="block text-[16px] font-semibold text-gray-900 mb-1">
           카테고리 <span className="text-[#E9631A]">*</span>
         </label>
-        <p className="text-[12px] text-[#989898] mb-2 pl-5">목표 카테고리를 선택해주세요</p>
+        <p className="text-[12px] text-[#989898] mb-2 pl-5">도전하고 싶은 카테고리를 선택해주세요</p>
         <div className="flex gap-2 flex-wrap justify-center">
           {categories.map((category) => (
             <button
@@ -38,7 +38,7 @@ const GoalFormBottom = ({ selectedCategory, onCategorySelect, purpose, onPurpose
           <textarea
             value={purpose}
             onChange={(e) => onPurposeChange(e.target.value)}
-            placeholder="왜 이 목표를 시작하려고 하나요?"
+            placeholder="최종적으로 어떤 목표를 달성하고 싶나요?"
             maxLength={20}
             className="w-full px-3 py-3 bg-[#F6F5F5] rounded-[10px] resize-none h-18 focus:outline-none text-[12px] placeholder:text-[#989898]"
           />
