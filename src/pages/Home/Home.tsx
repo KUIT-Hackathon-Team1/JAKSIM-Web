@@ -47,7 +47,24 @@ const Home = () => {
       language: "language",
       "self-development": "self-development",
     };
-    return categoryMap[category || ""] || "empty";
+    // 대소문자 구분 없이 변환
+    return categoryMap[(category || "").toLowerCase()] || "empty";
+  };
+
+  // border 상태를 result로 매핑 (DONE -> SUCCESS, PARTIAL -> HALF, FAIL -> FAIL, EMPTY -> DEFAULT)
+  const mapBorderToResult = (
+    border?: string
+  ): "SUCCESS" | "FAIL" | "HALF" | "DEFAULT" => {
+    switch (border) {
+      case "DONE":
+        return "SUCCESS";
+      case "PARTIAL":
+        return "HALF";
+      case "FAIL":
+        return "FAIL";
+      default:
+        return "DEFAULT";
+    }
   };
 
   // badges에 categoryIconKey 추가
@@ -229,17 +246,26 @@ const Home = () => {
                     >
                       <HistoryBadge
                         badge={badge}
-                        relatedBadges={badgesWithIconKey
-                          .filter((b) => b.goalId === badge.goalId)
-                          .map((b) => ({
-                            runId: b.runId,
-                            result:
-                              b.runStatus === "SUCCESS"
-                                ? "SUCCESS"
-                                : b.runStatus === "FAIL"
-                                ? "FAIL"
-                                : "DEFAULT",
-                          }))}
+                        relatedBadges={[
+                          {
+                            runId: 1,
+                            result: (badge as any).border?.[0]
+                              ? mapBorderToResult((badge as any).border[0])
+                              : "DEFAULT",
+                          },
+                          {
+                            runId: 2,
+                            result: (badge as any).border?.[1]
+                              ? mapBorderToResult((badge as any).border[1])
+                              : "DEFAULT",
+                          },
+                          {
+                            runId: 3,
+                            result: (badge as any).border?.[2]
+                              ? mapBorderToResult((badge as any).border[2])
+                              : "DEFAULT",
+                          },
+                        ]}
                       />
                     </div>
                   ))}
@@ -273,17 +299,65 @@ const Home = () => {
                               (badge) => badge.goalId === inProgressGoalId
                             )!
                           }
-                          relatedBadges={badgesWithIconKey
-                            .filter((b) => b.goalId === inProgressGoalId)
-                            .map((b) => ({
-                              runId: b.runId,
-                              result:
-                                b.runStatus === "SUCCESS"
-                                  ? "SUCCESS"
-                                  : b.runStatus === "FAIL"
-                                  ? "FAIL"
-                                  : "DEFAULT",
-                            }))}
+                          relatedBadges={
+                            groupedBadges.find(
+                              (badge) => badge.goalId === inProgressGoalId
+                            )
+                              ? [
+                                  {
+                                    runId: 1,
+                                    result: (
+                                      groupedBadges.find(
+                                        (b) => b.goalId === inProgressGoalId
+                                      ) as any
+                                    )?.border?.[0]
+                                      ? mapBorderToResult(
+                                          (
+                                            groupedBadges.find(
+                                              (b) =>
+                                                b.goalId === inProgressGoalId
+                                            ) as any
+                                          ).border[0]
+                                        )
+                                      : "DEFAULT",
+                                  },
+                                  {
+                                    runId: 2,
+                                    result: (
+                                      groupedBadges.find(
+                                        (b) => b.goalId === inProgressGoalId
+                                      ) as any
+                                    )?.border?.[1]
+                                      ? mapBorderToResult(
+                                          (
+                                            groupedBadges.find(
+                                              (b) =>
+                                                b.goalId === inProgressGoalId
+                                            ) as any
+                                          ).border[1]
+                                        )
+                                      : "DEFAULT",
+                                  },
+                                  {
+                                    runId: 3,
+                                    result: (
+                                      groupedBadges.find(
+                                        (b) => b.goalId === inProgressGoalId
+                                      ) as any
+                                    )?.border?.[2]
+                                      ? mapBorderToResult(
+                                          (
+                                            groupedBadges.find(
+                                              (b) =>
+                                                b.goalId === inProgressGoalId
+                                            ) as any
+                                          ).border[2]
+                                        )
+                                      : "DEFAULT",
+                                  },
+                                ]
+                              : []
+                          }
                           onClick={() => navigate(`/goal/${inProgressGoalId}`)}
                         />
                       )}
@@ -302,17 +376,26 @@ const Home = () => {
                     >
                       <HistoryBadge
                         badge={badge}
-                        relatedBadges={badgesWithIconKey
-                          .filter((b) => b.goalId === badge.goalId)
-                          .map((b) => ({
-                            runId: b.runId,
-                            result:
-                              b.runStatus === "SUCCESS"
-                                ? "SUCCESS"
-                                : b.runStatus === "FAIL"
-                                ? "FAIL"
-                                : "DEFAULT",
-                          }))}
+                        relatedBadges={[
+                          {
+                            runId: 1,
+                            result: (badge as any).border?.[0]
+                              ? mapBorderToResult((badge as any).border[0])
+                              : "DEFAULT",
+                          },
+                          {
+                            runId: 2,
+                            result: (badge as any).border?.[1]
+                              ? mapBorderToResult((badge as any).border[1])
+                              : "DEFAULT",
+                          },
+                          {
+                            runId: 3,
+                            result: (badge as any).border?.[2]
+                              ? mapBorderToResult((badge as any).border[2])
+                              : "DEFAULT",
+                          },
+                        ]}
                       />
                     </div>
                   ))}
