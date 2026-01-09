@@ -18,10 +18,18 @@ import ProgressRing from "../../components/ProgressRing";
 import useHomeData from "../../hooks/useHomeData";
 
 const Home = () => {
-  const { data: homeData } = useHomeData();
-  const { hasInProgress, badges, summary } = homeData;
-
+  const { data: homeData, isLoading } = useHomeData();
   const navigate = useNavigate();
+
+  if (isLoading || !homeData) {
+    return (
+      <div className="h-screen bg-[#FEF6EE] flex items-center justify-center">
+        로딩 중...
+      </div>
+    );
+  }
+
+  const { hasInProgress, badges, summary } = homeData;
 
   // 같은 goalId를 가진 배지들을 그룹화 (goalId 순으로 정렬)
   const groupedBadges = Array.from(
@@ -132,17 +140,10 @@ const Home = () => {
                 <ProgressRing result="DEFAULT" angle={120} />
                 <ProgressRing result="DEFAULT" angle={240} />
 
-                {/* 흰색 원 배경 */}
-                <img
-                  src={icDefaultBadge}
-                  alt="default badge"
-                  className="absolute w-[79px] h-[76px] object-contain"
-                />
-
                 {/* 클릭 가능한 별 아이콘 */}
                 <button
                   onClick={() => navigate("/goal/new")}
-                  className="relative z-10 w-[51px] h-[51px] flex items-center justify-center active:scale-95 transition-transform"
+                  className="relative z-10 w-[79px] h-[76px] flex items-center justify-center active:scale-95 transition-transform"
                 >
                   <img
                     src={`/badge/default-empty.svg`}
